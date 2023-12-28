@@ -1,64 +1,78 @@
 import { useEffect, useState } from "react";
 import { nodes } from "../api/api";
+import "./componentStyles/SelectOptions.css";
 import { TreeSelect } from "primereact/treeselect";
 import "primereact/resources/themes/saga-blue/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
-import Options from "./Options";
 
-const SelectOptions = ({ onOptionsChange, selectedOptions }) => {
+const SelectOptions = ({
+  onOptionsChange,
+  onOptionsChangeKeys,
+  selectedOptionKeys,
+}) => {
+  const [selectedNodeKeys, setSelectedNodeKeys] = useState(selectedOptionKeys);
   const [selectedNodeValues, setSelectedNodeValues] = useState([]);
 
   const handleChange = (e) => {
-    onOptionsChange(e.value);
+    setSelectedNodeKeys(e.value);
+    onOptionsChangeKeys(e.value);
 
-    const selectedValues = [];
     const keys = Object.keys(e.value);
 
-    // Function to get values by keys
-    const getValuesByKeys = (currentNode) => {
-      if (keys.includes(currentNode.key)) {
-        selectedValues.push(currentNode.data);
-      }
+    // Extract the selected values based on the keys using recursion
+    const selectedValues = nodes
+      .map((node) => findSelectedValuesRecursively(keys, node))
+      .flat();
 
-      if (currentNode.children) {
-        currentNode.children.forEach((childNode) => {
-          getValuesByKeys(childNode);
-        });
-      }
-    };
+    const filteredSelectedValues = selectedValues.filter((value) => !!value);
+    setSelectedNodeValues(filteredSelectedValues);
+    onOptionsChange(filteredSelectedValues);
+  };
 
-    nodes.forEach((node) => {
-      getValuesByKeys(node);
-    });
+  const findSelectedValuesRecursively = (selectedKeys, currentNode) => {
+    const selectedValues = [];
 
-    setSelectedNodeValues(selectedValues);
+    // Check if the current node is selected
+    if (selectedKeys.includes(currentNode.key)) {
+      selectedValues.push(currentNode.data);
+    }
+
+    // Check children if present
+    if (currentNode.children) {
+      currentNode.children.forEach((childNode) => {
+        const childValues = findSelectedValuesRecursively(
+          selectedKeys,
+          childNode
+        );
+        selectedValues.push(...childValues);
+      });
+    }
+
+    return selectedValues;
   };
 
   useEffect(() => {
-    console.log(selectedOptions, "selectedOptions");
-  }, [selectedOptions]);
+    setSelectedNodeKeys(selectedOptionKeys);
+  }, [selectedOptionKeys]);
 
   return (
     <div>
-      <div className="">
+      <div className=" col-md-6 select-sectors w-100 text-start">
+        <label htmlFor="select" className="pb-1">
+          Sectors:
+        </label>
         <TreeSelect
-          value={selectedOptions}
+          className="tree-select w-100 text-start bg-transparent mb-3"
+          value={selectedNodeKeys}
           onChange={handleChange}
           options={nodes}
           metaKeySelection={false}
           selectionMode="checkbox"
           display="chip"
           placeholder="Select Sector"
+          id="select"
         />
-      </div>
-      <div>
-        <strong>Selected Items:</strong>
-        <ul>
-          {selectedNodeValues.map((option) => (
-            <Options key={option.key} option={option} />
-          ))}
-        </ul>
       </div>
     </div>
   );

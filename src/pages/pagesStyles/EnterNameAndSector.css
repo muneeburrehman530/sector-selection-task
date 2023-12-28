@@ -1,0 +1,38 @@
+.form-wrapper {
+  /* background-color: rgba(233, 233, 233, 0.966); */
+  background-color: white;
+  padding: 2rem;
+  border-radius: 2rem;
+  /* border: 1px solid rgb(5, 92, 85); */
+  box-shadow: 0px 3px 22px -11px rgb(0, 0, 0);
+}
+h4 {
+  font-size: 1.3rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgb(5, 92, 85);
+  margin-bottom: 2rem;
+}
+.form-btn {
+  width: 100%;
+  border: 1px solid rgb(5, 92, 85);
+  background: rgb(5, 92, 85);
+  color: white;
+  padding: 0.5rem;
+  border-radius: 5px;
+  transition: all 0.3s ease-in-out;
+  margin-top: 1rem;
+}
+.form-btn:hover {
+  background-color: transparent;
+  color: rgb(5, 92, 85);
+}
+
+@media (max-width: 768px) {
+  h4 {
+    font-size: 1rem;
+  }
+  .form-wrapper {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}

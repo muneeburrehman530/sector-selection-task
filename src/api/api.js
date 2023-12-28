@@ -284,12 +284,12 @@ export const nodes = [
             ],
           },
           {
-            id: "1.5.4",
-            key: "1.5.4",
+            id: "1.5.7",
+            key: "1.5.7",
             label: "Metal Structures",
             data: {
-              id: "1.5.4",
-              key: "1.5.4",
+              id: "1.5.7",
+              key: "1.5.7",
               value: "Metal Structures",
               type: "child",
             },
